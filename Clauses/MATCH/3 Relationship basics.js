@@ -44,7 +44,7 @@
     }
     ,{
         clause: "RETURN"
-        ,expressions: [ { function: "type", arguments: ["r"] } ]
+        ,expression: { function: "type", argument: { expression: "r" } }
     }
 ]
 
