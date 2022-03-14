@@ -1,6 +1,6 @@
 /**
  * 2.1 Get all nodes
- * 
+ *
  * MATCH (n) RETURN n
  */
  [
@@ -17,7 +17,7 @@
 
 /**
  * 2.2 Get all nodes with a label
- * 
+ *
  */
 [
     {
@@ -36,7 +36,7 @@
 
 /**
  * 2.3 Related nodes
- * 
+ *
  * MATCH (director {name: "Oliver Stoner"})-[]-(movie)
  * RETURN movie.title
  */
@@ -62,7 +62,7 @@ clauses_match_2_3_related_nodes = [
 
 /**
  * 2.4 Match with labels
- * 
+ *
  * MATCH (:Person {name: 'Oliver Stone'})-[]-(movie:Movie)
  * RETURN movie.title
  */
@@ -71,7 +71,7 @@ clauses_match_2_3_related_nodes = [
         clause: "MATCH"
         ,expressions: [
             { pattern: [
-                { node: { 
+                { node: {
                     labels: ["Person"]
                     ,properties: { name: { literal: "Oliver Stone"} }
                 } }
