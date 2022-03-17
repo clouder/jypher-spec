@@ -6,9 +6,24 @@
  * RETURN n
  */
 [
-    {}
-    ,{}
-    ,{}
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [{ node: { name: "n" } }] }
+    } }
+    ,{ clause: {
+        name: "WHERE"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: [
+                { function: { name: "id", argument: { expression: "n"} } }
+                ,{ literal: 0 }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: "n"
+    } }
 ]
 
 /**
@@ -19,9 +34,28 @@
  * RETURN r
  */
 [
-    {}
-    ,{}
-    ,{}
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [
+            { node: {} }
+            ,{ edge: { name: "r" } }
+            ,{ node: {} }
+        ] }
+    }}
+    ,{ clause: {
+        name: "WHERE"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: [
+                { function: { name: "id", argument: { expression: "r" } } }
+                ,{ literal: 0 }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: "r"
+    } }
 ]
 
 /**
