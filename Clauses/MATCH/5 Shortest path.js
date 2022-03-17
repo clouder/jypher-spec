@@ -8,8 +8,8 @@
  * RETURN p
  */
 [
-    {
-        clause: "MATCH"
+    { clause: {
+        name: "MATCH"
         ,expressions: [
             { pattern: [
                 { node: {
@@ -25,20 +25,26 @@
                     ,properties: { name: { literal: "Oliver Stone" } }
                 } }
             ] }
-            ,{ operator: "=", expressions: [
-                "p",
-                { function: "shortestPath", argument: { pattern: [
-                    { node: { name: "martin" } }
-                    ,{ edge: { length: ["-inf", 15] } }
-                    ,{ node: { name: "oliver" } }
-                ] } }
-            ] }
+            ,{ operator: {
+                name: "="
+                ,expressions: [
+                    "p",
+                    { function: {
+                        name: "shortestPath"
+                        ,argument: { pattern: [
+                            { node: { name: "martin" } }
+                            ,{ edge: { length: ["-inf", 15] } }
+                            ,{ node: { name: "oliver" } }
+                        ] }
+                    } }
+                ]
+            } }
         ]
-    }
-    ,{
-        clause: "RETURN"
+    } }
+    ,{ clause: {
+        name: "RETURN"
         ,expression: "p"
-    }
+    } }
 ]
 
 /**
@@ -122,28 +128,6 @@
     } }
 ]
 
-[
-    {}
-    ,{
-        clause: "WHERE"
-        ,expression: { function: "none", argument: {
-            operator: "IN"
-            ,expressions: [
-                "r"
-                ,{ function: "relationships", argument: { expression: "p" } }
-            ]
-            ,clause: {
-                name: "WHERE"
-                ,expression: { operator: "=", expressions: [{ function: "type"}]}
-            }
-        } }
-    }
-    ,{
-        clause: "RETURN"
-        ,expression: "p"
-    }
-]
-
 /**
  * 5.3 All shortest paths
  *
@@ -154,6 +138,41 @@
  * RETURN p
  */
 [
-    {},
-    {}
+    { clause: {
+        name: "MATCH"
+        ,expressions: [
+            { pattern: [
+                { node: {
+                    name: "martin"
+                    ,label: "Person"
+                    ,properties: { name: { literal: "Martin Sheen"} }
+                } }
+            ] }
+            ,{ pattern: [
+                { node: {
+                    name: "michael"
+                    ,label: "Person"
+                    ,properties: { name: { literal: "Michael Douglas"} }
+                } }
+            ] }
+            ,{ operator: {
+                name: "="
+                ,expressions: [
+                    "p"
+                    ,{ function: {
+                        name: "allShortestPaths"
+                        ,argument: { pattern: [
+                            { node: { name: "martin" } },
+                            { edge: { length: [1, "inf"] } }
+                            ,{ node: { name: "michael" } }
+                        ] }
+                    } }
+                ]
+            } }
+        ]
+    } },
+    { clause: {
+        name: "RETURN"
+        ,expression: "p"
+    } }
 ]
