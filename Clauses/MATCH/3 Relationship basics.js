@@ -4,23 +4,23 @@
  * MATCH (:Person {name: 'Oliver Stone'})-[]->(movie) RETURN movie.title
  */
 [
-    {
-        clause: "MATCH"
-        ,expressions: [
-            { pattern: [
-                { node: {
-                    labels: ["Person"]
-                    ,properties: {name: { literal: "Oliver Stone"} }
-                } }
-                ,{ edge: {} }
-                ,{ node: { name: "movie" } }
-            ] }
-        ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expressions: [ { operator: ".", expressions: ["movie", "title"] } ]
-    }
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [
+            { node: {
+                labels: ["Person"]
+                ,properties: { name: { literal: "Oliver Stone"} }
+            } }
+            ,{ edge: {} }
+            ,{ node: { name: "movie" } }
+        ] }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { operator: {
+            name: ".", expressions: ["movie", "title"]
+        } }
+    } }
 ]
 
 /**
@@ -29,23 +29,23 @@
  * MATCH (:Person {name: 'Oliver Stone'})-[r]->(movie) RETURN type(r)
  */
 [
-    {
-        clause: "MATCH"
-        ,expressions: [
-            { pattern: [
-                { node: {
-                    labels: ["Person"]
-                    ,properties: { name: { literal: "Oliver Stone" } }
-                } }
-                ,{ edge: { name: "r" } }
-                ,{ node: { name: "movie" } }
-            ] }
-        ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expression: { function: "type", argument: { expression: "r" } }
-    }
+    { clause: {
+        name: "MATCH"
+        ,expressions: { pattern: [
+            { node: {
+                labels: ["Person"]
+                ,properties: { name: { literal: "Oliver Stone" } }
+            } }
+            ,{ edge: { name: "r" } }
+            ,{ node: { name: "movie" } }
+        ] }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { function: {
+            name: "type", argument: { expression: "r" }
+        } }
+    } }
 ]
 
 /**
@@ -55,24 +55,25 @@
  * RETURN actor.name
  */
 [
-    {
-        clause: "MATCH"
-        ,expressions: [
-            { pattern: [
-                { node: {
-                    name: "wallstreet"
-                    ,labels: ["Movie"]
-                    ,properties: { title: { literal: "Wall Street" } }
-                } }
-                ,{ edge: { type: "ACTED_IN" } }
-                ,{ node: { name: "actor" } }
-            ] }
-        ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expressions: [{ operator: '.', expressions: ["actor", "name"] }]
-    }
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [
+            { node: {
+                name: "wallstreet"
+                ,labels: ["Movie"]
+                ,properties: { title: { literal: "Wall Street" } }
+            } }
+            ,{ edge: { type: "ACTED_IN" } }
+            ,{ node: { name: "actor" } }
+        ] }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { operator: {
+            name: '.'
+            ,expressions: ["actor", "name"]
+        } }
+    } }
 ]
 
 /**
@@ -82,23 +83,24 @@
  * RETURN person.name
  */
 [
-    {
-        clause: "MATCH"
-        ,expressions: [
-            { pattern: [
-                { node: {
-                    name: "wallstreet"
-                    ,properties: { title: { literal: "Wall Street" } }
-                } }
-                ,{ edge: { types: ["ACTED_IN", "DIRECTED"] } }
-                ,{ node: { name: "person" } }
-            ] }
-        ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expressions: [{ operator: '.', expressions: ["person", "name"] }]
-    }
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [
+            { node: {
+                name: "wallstreet"
+                ,properties: { title: { literal: "Wall Street" } }
+            } }
+            ,{ edge: { types: ["ACTED_IN", "DIRECTED"] } }
+            ,{ node: { name: "person" } }
+        ] }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { operator: {
+            name: '.'
+            ,expressions: ["person", "name"]
+        } }
+    } }
 ]
 
 /**
@@ -108,21 +110,19 @@
  * RETURN r.role
  */
 [
-    {
-        clause: "MATCH"
-        ,expressions: [
-            { pattern: [
-                { node: {
-                    name: "wallstreet"
-                    ,properties: { title: { literal: "Wall Street" } }
-                } }
-                ,{ edge: { name: "r", type: ["ACTED_IN"] } }
-                ,{ node: { name: "actor" } }
-            ] }
-        ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expressions: [{ operator: '.', expressions: ["r", "role"] }]
-    }
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [
+            { node: {
+                name: "wallstreet"
+                ,properties: { title: { literal: "Wall Street" } }
+            } }
+            ,{ edge: { name: "r", type: ["ACTED_IN"] } }
+            ,{ node: { name: "actor" } }
+        ] }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { operator: { name: '.', expressions: ["r", "role"] } }
+    } }
 ]
