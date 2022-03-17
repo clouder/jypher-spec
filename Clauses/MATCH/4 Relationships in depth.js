@@ -7,8 +7,8 @@
  * CREATE (rob)-[:`TYPE INCLUDING A SPACE`]->(charlie)
  */
 [
-    {
-        clause: "MATCH"
+    { clause: {
+        name: "MATCH"
         ,expressions: [
             { pattern: [
                 { node: {
@@ -25,17 +25,15 @@
                 } }
             ] }
         ]
-    }
-    ,{
-        clause: "CREATE"
-        ,expressions: [
-            { pattern: [
-                { node: { name: "rob" } }
-                ,{ edge: { type: "TYPE INCLUDING A SPACE"}, direction: ">" }
-                ,{ node: {name: "charlie" } }
-            ] }
-        ]
-    }
+    } }
+    ,{ clause: {
+        name: "CREATE"
+        ,expression: { pattern: [
+            { node: { name: "rob" } }
+            ,{ edge: { type: "TYPE INCLUDING A SPACE"}, direction: ">" }
+            ,{ node: {name: "charlie" } }
+        ] }
+    } }
 ]
 
 /**
@@ -45,28 +43,26 @@
  * RETURN movie.title, director.name
  */
 [
-    {
-        clause: "MATCH"
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [
+            { node: {
+                name: "charlie"
+                ,properties: { name: { literal: "Charlie Sheen" } }
+            } }
+            ,{ edge: { type: "ACTED_IN" }, direction: ">" }
+            ,{ node: { name: "movie" } }
+            ,{ edge: { type: "DIRECTED "}, direction: "<" }
+            ,{ node: { name: "director" } }
+        ] }
+    } }
+    ,{ clause: {
+        name: "RETURN"
         ,expressions: [
-            { pattern: [
-                { node: {
-                    name: "charlie"
-                    ,properties: { name: { literal: "Charlie Sheen" } }
-                } }
-                ,{ edge: { type: "ACTED_IN" }, direction: ">" }
-                ,{ node: { name: "movie" } }
-                ,{ edge: { type: "DIRECTED "}, direction: "<" }
-                ,{ node: { name: "director" } }
-            ]}
+            { operator: { name: ".", expressions: ["movie", "title"] } }
+            ,{ operator: { name:  ".", expressions: ["director", "name"] } }
         ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expressions: [
-            { operator: ".", expressions: ["movie", "title"] }
-            ,{ operator: ".", expressions: ["director", "name"] }
-        ]
-    }
+    } }
 ]
 
 /**
@@ -76,23 +72,24 @@
  * RETURN movie.title
  */
 [
-    {
-        clause: "MATCH"
-        ,expressions: [
-            { pattern: [
-                { node: {
-                    name: "charlie"
-                    ,properties: { name: { literal: "Charlie Sheen" } }
-                } }
-                ,{ edge: { type: "ACTED_IN", length: [1, 3] } }
-                ,{ node: { name: "movie", labels: ["Movie"] } }
-            ] }
-        ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expressions: [{ operator: ".", expressions: ["movie", "title"] }]
-    }
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [
+            { node: {
+                name: "charlie"
+                ,properties: { name: { literal: "Charlie Sheen" } }
+            } }
+            ,{ edge: { type: "ACTED_IN", length: [1, 3] } }
+            ,{ node: { name: "movie", labels: ["Movie"] } }
+        ] }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { operator: {
+            name: "."
+            ,expressions: ["movie", "title"]
+        } }
+    } }
 ]
 
 /**
@@ -102,23 +99,24 @@
  * RETURN person.name
  */
 [
-    {
-        clause: "MATCH"
-        ,expressions: [
-            { pattern: [
-                { node: {
-                    name: "charlie"
-                    ,properties: { name: { literal: "Charlie Sheen" } }
-                } }
-                ,{edge: { types: ["ACTED_IN", "DIRECTED"], length: [2] } }
-                ,{ node: { name: "person", labels: ["Person"] } }
-            ] }
-        ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expressions: [{ operator: ".", expressions: ["person", "name"] }]
-    }
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [
+            { node: {
+                name: "charlie"
+                ,properties: { name: { literal: "Charlie Sheen" } }
+            } }
+            ,{edge: { types: ["ACTED_IN", "DIRECTED"], length: [2] } }
+            ,{ node: { name: "person", labels: ["Person"] } }
+        ] }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { operator: {
+            name: "."
+            ,expressions: ["person", "name"]
+        } }
+    } }
 ]
 
 /**
@@ -128,31 +126,30 @@
  * RETURN relationships(p)
  */
 [
-    {
-        clause: "MATCH"
-        ,expressions: [
-            {
-                operator: "="
-                ,expressions: [
-                    "p"
-                    ,{ pattern: [
-                        { node: {
-                            name: actor
-                            ,properties: { name: { literal: "Charlie Sheen" } }
-                        } }
-                        ,{ edge: { type: "ACTED_IN", length: [2] } }
-                        ,{ node: { name: "co_actor" } }
-                    ] }
-                ]
-            }
-        ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expressions: [
-            { function: "relationships", arguments: [{ expression: "p" }] }
-        ]
-    }
+    { clause: {
+        name: "MATCH"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: [
+                "p"
+                ,{ pattern: [
+                    { node: {
+                        name: actor
+                        ,properties: { name: { literal: "Charlie Sheen" } }
+                    } }
+                    ,{ edge: { type: "ACTED_IN", length: [2] } }
+                    ,{ node: { name: "co_actor" } }
+                ] }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { function: {
+            name: "relationships"
+            ,argument: { expression: "p" }
+        } }
+    } }
 ]
 
 /**
@@ -163,10 +160,10 @@
  * RETURN p
  */
 [
-    {
-        clause: "MATCH"
-        ,expression: {
-            operator: "="
+    { clause: {
+        name: "MATCH"
+        ,expression: { operator: {
+            name: "="
             ,expressions: [
                 "p"
                 ,{ pattern: [
@@ -175,34 +172,34 @@
                     ,{ node: { name: "martin", labels: "Person" } }
                 ] }
             ]
-        }
-    }
-    ,{
-        clause: "WHERE"
-        ,expression: {
-            operator: "AND"
+        } }
+    } }
+    ,{ clause: {
+        name: "WHERE"
+        ,expression: { operator: {
+            name: "AND"
             ,expressions: [
-                {
-                    operator: "="
+                { operator: {
+                    name: "="
                     ,expressions: [
                         { operator: ".", expressions: ["charlie", "name"] }
                         ,{ literal: "Charlie Sheen" }
                     ]
-                }
-                ,{
-                    operator: "="
+                } }
+                ,{ operator: {
+                    name: "="
                     ,expressions: [
-                        { operator: ".", expressoins: ["martine", "name"] }
+                        { operator: {
+                            name: "."
+                            ,expressoins: ["martine", "name"]
+                        } }
                         ,{ literal: "Martin Sheen"}
                     ]
-                }
+                } }
             ]
-        }
-    }
-    ,{
-        clause: "RETURN"
-        ,expression: "p"
-    }
+        } }
+    } }
+    ,{ clause: { name: "RETURN", expression: "p" } }
 ]
 
 /**
@@ -212,8 +209,8 @@
  * RETURN x
  */
 [
-    {
-        clause: "MATCH"
+    { clause: {
+        name: "MATCH"
         ,expression: { pattern: [
             { node: {
                 name: "wallstreet"
@@ -223,11 +220,8 @@
             ,{ edge: { length: [0, 1] } }
             ,{ node: { name: "x" } }
         ] }
-    }
-    ,{
-        clause: "RETURN"
-        ,expression: "x"
-    }
+    } }
+    ,{ clause: { name: "RETURN", expression: "x" } }
 ]
 
 /**
@@ -237,10 +231,10 @@
  * RETURN p
  */
 [
-    {
-        clause: "MATCH"
-        ,expression: {
-            operator: "="
+    { clause: {
+        name: "MATCH"
+        ,expression: { operator: {
+            name: "="
             ,expressions: [
                 "p"
                 ,{ pattern: [
@@ -252,12 +246,9 @@
                     ,{ node: {} }
                 ] }
             ]
-        }
-    }
-    ,{
-        clause: "RETURN"
-        ,expression: "p"
-    }
+        } }
+    } }
+    ,{ clause: { name: "RETURN" ,expression: "p" } }
 ]
 
 /**
@@ -268,26 +259,26 @@
  * RETURN a, b
  */
 [
-    {
-        clause: "MATCH"
+    { clause: {
+        name: "MATCH"
         ,expression: { pattern: [
             { node: { name: "a" } }
             ,{ edge: { name: "r" } }
             ,{ node: { name: "b" } }
         ] }
-    }
-    ,{
-        clause: "WHERE"
-        ,expression: {
-            operator: "="
+    } }
+    ,{ clause: {
+        name: "WHERE"
+        ,expression: { operator: {
+            name: "="
             ,expressions: [
-                { function: "id", argument: { expression: "r" } }
+                { function: { name: "id", argument: { expression: "r" } } }
                 ,{ literal: 0 }
             ]
-        }
-    }
-    ,{
-        clause: "RETURN"
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
         ,expressions: ["a", "b"]
-    }
+    } }
 ]
