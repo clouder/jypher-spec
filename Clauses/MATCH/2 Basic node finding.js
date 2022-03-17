@@ -40,22 +40,20 @@
 [
     { clause: {
         name: "MATCH"
-        ,expressions: [
-            { pattern: [
-                { node: {
-                    name: "director"
-                    ,properties: { name: { literal: "Oliver Stoner"} }
-                } }
-                ,{ edge: {} }
-                ,{ node: { name: "movie" } }
-            ] }
-        ]
+        ,expression: { pattern: [
+            { node: {
+                name: "director"
+                ,properties: { name: { literal: "Oliver Stoner"} }
+            } }
+            ,{ edge: {} }
+            ,{ node: { name: "movie" } }
+        ] }
     } }
     ,{ clause:  {
         name: "RETURN"
-        ,expressions: [
-            { operator: { name: '.' ,expressions: ["movie", "title"] } }
-        ]
+        ,expression: { operator: {
+            name: '.' ,expressions: ["movie", "title"]
+        } }
     } }
 ]
 
@@ -68,21 +66,19 @@
 [
     { clause: {
         name: "MATCH"
-        ,expressions: [
-            { pattern: [
-                { node: {
-                    labels: ["Person"]
-                    ,properties: { name: { literal: "Oliver Stone"} }
-                } }
-                ,{ edge: {} }
-                ,{ node: { name: "movie", labels: ["Movie"] } }
-            ] }
-        ]
+        ,expressions: { pattern: [
+            { node: {
+                labels: ["Person"]
+                ,properties: { name: { literal: "Oliver Stone"} }
+            } }
+            ,{ edge: {} }
+            ,{ node: { name: "movie", labels: ["Movie"] } }
+        ] }
     } }
     ,{ clause:  {
         name: "RETURN"
-        ,expressions: [
-            { operator: { name: '.' , expressions: ["movie", "title"] } }
-        ]
+        ,expression: { operator: {
+            name: '.' , expressions: ["movie", "title"]
+        } }
     } }
 ]
