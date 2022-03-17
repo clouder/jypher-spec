@@ -4,35 +4,32 @@
  * MATCH (n) RETURN n
  */
  [
-    {
-        clause: "MATCH"
-        ,expressions: [
-            { pattern: [
-                { node: { name: "n" } }
-            ] }
-        ]
-    }
-    ,{ clause: "RETURN", expressions: ["n"] }
-] //=> MATCH (n) RETURN n
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [{ node: { name: "n" } }] }
+    } }
+    ,{ clause: { name: "RETURN", expression: "n" } }
+]
 
 /**
  * 2.2 Get all nodes with a label
  *
+ * MATCH (movie:Movie) RETURN movie.title
  */
 [
-    {
-        clause: "MATCH"
+    { clause: {
+        name: "MATCH"
         ,expressions: [
-            { pattern: [
-                { node: { name: "movie", labels: ["Movie"] } }
-            ] }
+            { pattern: [{ node: { name: "movie", labels: ["Movie"] } }] }
         ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expressions: [{ operator: '.', expressions: ["movie", "title"] }]
-    }
-] //=> MATCH (movie:Movie) RETURN movie.title
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: { name: '.', expressions: ["movie", "title"] } }
+        ]
+    } }
+]
 
 /**
  * 2.3 Related nodes
@@ -40,9 +37,9 @@
  * MATCH (director {name: "Oliver Stoner"})-[]-(movie)
  * RETURN movie.title
  */
-clauses_match_2_3_related_nodes = [
-    {
-        clause: "MATCH"
+[
+    { clause: {
+        name: "MATCH"
         ,expressions: [
             { pattern: [
                 { node: {
@@ -53,11 +50,13 @@ clauses_match_2_3_related_nodes = [
                 ,{ node: { name: "movie" } }
             ] }
         ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expressions: [{ operator: '.', expressions: ["movie", "title"] }]
-    }
+    } }
+    ,{ clause:  {
+        name: "RETURN"
+        ,expressions: [
+            { operator: { name: '.' ,expressions: ["movie", "title"] } }
+        ]
+    } }
 ]
 
 /**
@@ -67,8 +66,8 @@ clauses_match_2_3_related_nodes = [
  * RETURN movie.title
  */
 [
-    {
-        clause: "MATCH"
+    { clause: {
+        name: "MATCH"
         ,expressions: [
             { pattern: [
                 { node: {
@@ -79,9 +78,11 @@ clauses_match_2_3_related_nodes = [
                 ,{ node: { name: "movie", labels: ["Movie"] } }
             ] }
         ]
-    }
-    ,{
-        clause: "RETURN"
-        ,expressions: [{ operator: '.', expressions: ["movie", "title"] }]
-    }
+    } }
+    ,{ clause:  {
+        name: "RETURN"
+        ,expressions: [
+            { operator: { name: '.' , expressions: ["movie", "title"] } }
+        ]
+    } }
 ]
