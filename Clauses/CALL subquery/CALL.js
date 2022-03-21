@@ -8,6 +8,44 @@
  * }
  * RETURN x, y
  */
+[
+    { clause: {
+        name: "UNWIND"
+        ,expression: { operator: {
+            name: "AS"
+            ,expressions: [
+                { list: [
+                    { literal: 0 }
+                    ,{ literal: 1 }
+                    ,{ literal: 2 }
+                ] }
+                ,"x"
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "CALL"
+        ,clauses: [
+            { clause: { name: "WITH" ,expression: "x" }}
+            ,{ clause: {
+                name: "RETURN"
+                ,expression: { operator: {
+                    name: "AS"
+                    ,expressions: [
+                        { operator: {
+                            name: "*"
+                            ,expressions: ["x" ,{ literal: 10 }]
+                        } }
+                    ]
+                } }
+            } }
+        ]
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expressions: ["x", "y"]
+    } }
+]
 
 /**
  * 3. Post-union processing
@@ -26,6 +64,63 @@
  * RETURN p.name, p.age
  * ORDER BY p.name
  */
+
+[
+    { clause: {
+        name: "CALL"
+        ,clauses: [
+            { clause: {
+                name: "MATCH"
+                ,expression: { pattern: [
+                    { node: { name: "p" ,label: "Person"}}
+                ] }
+            } }
+            ,{ clause: { name: "RETURN" ,expression: "p" } }
+            ,{ clause: {
+                name: "ORDER BY"
+                ,expression: { operator: "." ,expressions: ["p" ,"age"] }
+                ,direction: "ASC"
+            } }
+            ,{ clause: { name: "LIMIT" ,expression: { literal: 1 } } }
+            ,{ clause: {
+                name: "UNION"
+            } }
+            ,{ clause: {
+                name: "MATCH"
+                ,expression: { pattern: [
+                    { node: { name: "p" ,label: "Person"}}
+                ] }
+            } }
+            ,{ clause: { name: "RETURN", expression: "p" } }
+            ,{ clause: {
+                name: "ORDER BY"
+                ,expression: { operator: ".", expressions: ["p" ,"age"] }
+                ,direction: "DESC"
+            } }
+            ,{ clause: { name: "LIMIT" ,expression: { literal: 1 } } }
+        ]
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: {
+                name: "."
+                ,expressions: ["p", "name"]
+            } }
+            ,{ operator: {
+                name: "."
+                ,expressions: ["p", "age"]
+            } }
+        ]
+    } }
+    ,{ clause: {
+        name: "ORDER BY"
+        ,expression: { operator: {
+            name: "."
+            ,expressions: ["p" ,"name"]
+        } }
+    } }
+]
 
 /**
  * 4. Aggregations
