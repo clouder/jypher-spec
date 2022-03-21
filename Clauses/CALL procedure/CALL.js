@@ -3,6 +3,12 @@
  *
  * CALL db.labels()
  */
+[
+    { clause: {
+        name: "CALL"
+        ,procedure: "db.labels"
+    } }
+]
 
 /**
  * 3. View the signature for a procedure
@@ -11,18 +17,56 @@
  * WHERE name='dbms.listConfig'
  * RETURN signature
  */
+[
+    { clause: {
+        name: "CALL"
+        ,procedure: "dbms.procedures"
+        ,yield: { expressions: ["name" ,"signature"] }
+    } }
+    ,{ clause: {
+        name: "WHERE"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: ["name" , { literal: "dbms.listConfig" }]
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: "signature"
+    } }
+]
 
 /**
  * 4. Call a procedure using a quoted namespace and name
  *
  * CALL `db`.`labels()`
  */
+[
+    { clause: {
+        name: "CALL"
+        ,procedure: { operator: {
+            name: "."
+            ,expressions: ["`db`" ,"`labels`"]
+        } }
+    } }
+]
 
 /**
  * 5. Call a procedure with literal arguments
  *
  * CALL dbms.security.createUser('example_username', 'example_password', false)
  */
+[
+    { clause: {
+        name: "CALL"
+        ,procedure: "dbms.security.createUser"
+        ,arguments: [
+            { literal: "example_username" }
+            ,{ literal: "example_password" }
+            ,{ literal: false }
+        ]
+    } }
+]
 
 /**
  * 6. Call a procedure with parameter arguments
