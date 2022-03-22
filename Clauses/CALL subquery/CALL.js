@@ -392,7 +392,41 @@
  * } IN TRANSACTIONS OF 2 ROWS
  */
 [
-    {}
+    { clause: {
+        name: "LOAD CSV"
+        ,from: { literal: "file:///friends.csv" }
+        ,as: { expression: "line" }
+    } }
+    ,{ clause: {
+        name: "CALL"
+        ,clauses: [
+            { clause: {
+                name: "WITH"
+            } }
+            ,{ clause: {
+                name: "CREATE"
+                ,expression: { pattern: [
+                    { node: {
+                        label: "Person"
+                        ,properties: {
+                            name: { operator: {
+                                name: "[]"
+                                ,expressions: ["line" ,{ literal: 1 }]
+                            } }
+                            ,age: { function: {
+                                name: "toInteger"
+                                ,argument: { operator: {
+                                    name: "[]"
+                                    ,expressions: ["line" ,{ literal: 2 }]
+                                } }
+                            } }
+                        }
+                    } }
+                ] }
+            } }
+        ]
+        ,modifier: { name: "IN TRANSACTIONS", rows: { literal: 2 } }
+    } }
 ]
 
 /**
@@ -404,7 +438,22 @@
  * } IN TRANSACTIONS OF 2 ROWS
  */
 [
-    {}
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [{ node: { name: "n"} }] }
+    } }
+    ,{ clause: {
+        name: "CALL"
+        ,clauses: [
+            { clause: { name: "WITH" ,expression: "n" } }
+            ,{ clause: {
+                name: "DELETE"
+                ,modifier: { name: "DETACH" }
+                ,expression: "n"
+            } }
+        ]
+        ,modifier: { name: "IN TRANSACTIONS" ,rows: { literal: 2} }
+    } }
 ]
 
 /**
@@ -418,5 +467,41 @@
  * RETURN i
  */
 [
-    {}
+    { clause: {
+        name: "UNWIND"
+        ,expression: { operator: {
+            name: "AS"
+            ,expressions: [
+                { list: [
+                    { literal: 4 }
+                    ,{ literal: 2 }
+                    ,{ literal: 1 }
+                    ,{ literal: 0 }
+                ]}
+                ,"i"
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "CALL"
+        ,clauses: [
+            { clause: { name: "WITH" ,expression: "i" } }
+            ,{ clause: {
+                name: "CREATE"
+                ,expression: { pattern: [
+                    { node: {
+                        label: "Example"
+                        ,properties: {
+                            num: { operator: {
+                                name: "/"
+                                ,expressions: [{ literal: 100 } ,"i"]
+                            } }
+                        }
+                    } }
+                ] }
+            } }
+        ]
+        ,modifier: { name: "IN TRANSACTIONS" ,rows: { literal: 2 } }
+    } }
+    ,{ clause: { name: "RETURN" ,expression: "i" } }
 ]
