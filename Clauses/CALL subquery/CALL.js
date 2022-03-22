@@ -132,6 +132,46 @@
  *   RETURN c.name AS friend
  * }
  * RETURN p.name, friend
+ */
+[
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [{ node: { name: "p" ,label: "Person"} }] }
+    } }
+    ,{ clause: {
+        name: "CALL"
+        ,clauses: [
+            { clause: { name: "WITH", expression: "p" } }
+            ,{ clause: {
+                name: "MATCH"
+                ,expression: { pattern: [
+                    { node: { name: "p" } }
+                    ,{ edge: { label: "FRIEND_OF" } }
+                    ,{ node: { name: "c", label: "Person" } }
+                ] }
+            } }
+            ,{ clause: {
+                name: "RETURN"
+                ,expression: { operator: {
+                    name: "AS"
+                    ,expressions: [
+                        { operator: { name: "." ,expressions: ["c" ,"name"] } }
+                        ,"friend"
+                    ]
+                } }
+            } }
+        ]
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: { name: ".", expressions: ["p" ,"name"] } }
+            ,"friend"
+        ]
+    } }
+]
+
+/**
  *
  * MATCH (p:Person)
  * CALL {
@@ -141,6 +181,45 @@
  * }
  * RETURN p.name, numberOfConnections
  */
+[
+    { clause: {
+        name: "MATCH"
+    } }
+    ,{ clause: {
+        name: "CALL"
+        ,clauses: [
+            { clause: { name: "WITH", expression: "p" } }
+            ,{ clause: {
+                name: "MATCH"
+                ,expression: { pattern: [
+                    { node: { name: "p" } }
+                    ,{ edge: {} }
+                    ,{ node: { name: "c"} }
+                ] }
+            } }
+            ,{ clause: {
+                name: "RETURN"
+                ,expression: { operator: {
+                    name: "AS"
+                    ,expressions: [
+                        { function: {
+                            name: "count"
+                            ,argument: { expression: "c" }
+                        } }
+                        ,"numberOfConnections"
+                    ]
+                } }
+            } }
+        ]
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: { name: "." ,expressions: ["p" ,"name"] } }
+            ,"numberOfConnections"
+        ]
+    } }
+]
 
 /**
  * 5. Unit subqueries and side-effects
@@ -153,6 +232,48 @@
  * }
  * RETURN count(*)
  */
+[
+    { clause: {
+        name: "MATCH"
+    } }
+    ,{ clause: {
+        name: "CALL"
+        ,clauses: [
+            { clause: { name: "WITH" ,expression: "p" } }
+            ,{ clause: {
+                name: "UNWIND"
+                ,expression: { operator: {
+                    name: "AS"
+                    ,expressions: [
+                        { function: {
+                            name: "range"
+                            ,arguments: [{ literal: 1 } ,{ literal: 5}]
+                        } }
+                        ,"i"
+                    ]
+                } }
+            } }
+            ,{ clause: {
+                name: "CREATE"
+                ,expression: { pattern: [
+                    { node: {
+                        label: "Person"
+                        ,properties: { name: { expression: {
+                            operator: { name: ".", expressions: ["p" ,"name"] }
+                        } } }
+                    } }
+                ] }
+            } }
+        ]
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { function: {
+            name: "count"
+            ,argument: { expression: "*"}
+        } }
+    } }
+]
 
 /**
  * 6. Aggregation on imported variables
@@ -166,6 +287,62 @@
  * }
  * RETURN p.name, youngerPersonsCount
  */
+[
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [
+            { node: { name: "p" ,label: "Person" } }
+        ] }
+    } }
+    ,{ clause: {
+        name: "CALL"
+        ,clauses: [
+            { clause: { name: "WITH" ,expression: "p" } }
+            ,{ clause: {
+                name: "MATCH"
+                ,expression: { pattern: [
+                    { node: { name: "other", label: "Person" } }
+                ] }
+            } }
+            ,{ clause: {
+                name: "WHERE"
+                ,expression: { operator: {
+                    name: "<"
+                    ,expressions: [
+                        { operator: {
+                            name: "."
+                            ,expressions: ["other" ,"age"]
+                        } }
+                        ,{ operator: { name: "." ,expressions: ["p" ,"age"] } }
+                    ]
+                } }
+            } }
+            ,{ clause: {
+                name: "RETURN"
+                ,expression: { operator: {
+                    name: "AS"
+                    ,expression: { operator: {
+                        name: "AS"
+                        ,expressions: [
+                            { function: {
+                                name: "count"
+                                ,argument: { expression: "other" }
+                            } }
+                            ,"youngerPersonCount"
+                        ]
+                    } }
+                } }
+            } }
+        ]
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: { name: "." ,expressions: ["p" ,"name"] } }
+            ,"youngerPersonsCount"
+        ]
+    } }
+]
 
 /**
  * 7. Subqueries in transactions
@@ -176,6 +353,34 @@
  *   CREATE (:PERSON {name: line[1], age: toInteger(line[2])})
  * } IN TRANSACTIONS
  */
+[
+    { clause: {
+        name: "LOAD CSV"
+        ,from: { literal: "file:///fiends.csv" }
+        ,as: { expression: "line" }
+    } }
+    ,{ clause: {
+        name: "CALL"
+        ,clauses: [
+            { clause: { name: "WITH", expression: "line" } }
+            ,{ clause: {
+                name: "CREATE"
+                ,expression: { pattern: [
+                    { node: {
+                        label: "PERSON"
+                        ,properties: {
+                            name: { expression: { operator: {
+                                name: "[]"
+                                ,expressions: ["line" ,{ literal: 1 }]
+                            } } }
+                        }
+                    } }
+                ] }
+            } }
+        ]
+        ,modifier: { name: "IN TRANSACTIONS" }
+    } }
+]
 
 /**
  * 7.1. Batching
@@ -185,6 +390,12 @@
  *   WITH line
  *   CREATE (:Person {name: line[1], age: toInteger(line[2])})
  * } IN TRANSACTIONS OF 2 ROWS
+ */
+[
+    {}
+]
+
+/**
  *
  * MATCH (n)
  * CALL {
@@ -192,6 +403,9 @@
  *   DETACH DELETE n
  * } IN TRANSACTIONS OF 2 ROWS
  */
+[
+    {}
+]
 
 /**
  * 7.2. Errors
@@ -203,3 +417,6 @@
  * } IN TRANSACTIONS OF 2 ROWS
  * RETURN i
  */
+[
+    {}
+]
