@@ -4,11 +4,88 @@
  * MATCH (n {name: 'Andy'})
  * SET n.surname = 'Taylor'
  * RETURN n.name, n.surname
- *
+ */
+[
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [
+            { node: { name: "n" ,properties: { name: { literal: "Andy" } } } }
+        ] }
+    } }
+    ,{ clause: {
+        name: "SET"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: [
+                { operator: { name: "." ,expressions: ["n" ,"surname"] } }
+                ,{ literal: "Taylor" }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: { name: "." ,expressions: ["n" ,"name"] } }
+            ,{ operator: { name: "." ,expressions: ["n" ,"surname"] } }
+        ]
+    } }
+]
+
+/**
  * MATCH (n {name: 'Andy'})
  * SET (CASE WHEN n.age = 36 THEN n END).worksIn = 'Malmo'
  * RETURN n.name, n.worksIn
- *
+ */
+[
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [
+            { node: { name: "n" ,properties: { name: { literal: "Andy" } } } }
+        ] }
+    } }
+    ,{ clause: {
+        name: "SET"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: [
+                { operator: {
+                    name: "."
+                    ,expressions: [
+                        { operator: {
+                            name: "()"
+                            ,expression: {
+                                name: "CASE"
+                                ,condition: {
+                                    when: { operator: {
+                                        name: "="
+                                        ,expressions: [
+                                            { operator: {
+                                                name: "."
+                                                ,expressions: ["n" ,"age"]
+                                            } }
+                                        ]
+                                    } }
+                                    ,then: { expression: "n" }
+                                }
+                            }
+                        } }
+                        ,"worksIn"
+                    ]
+                } }
+                ,{ literal: "Malmo" }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: { name: "." ,expressions: ["n" ,"name"] } }
+            ,{ operator: { name: "." ,expressions: ["n" ,"worksIn"] } }
+        ]
+    } }
+]
+
+/**
  * MATCH (n {name: 'Andy'})
  * SET (CASE WHEN n.age = 55 THEN n END).worksIn = 'Malmo'
  * RETURN n.name, n.worksIn
