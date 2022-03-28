@@ -25,18 +25,32 @@
 			,"} }$0"
 		]
 	}
-	,"expression": {
+	,"expression object": {
 		"scope": "javascript"
 		,"prefix": "exp"
 		,"body": [
 			"{ expression: $0 }"
 		]
 	}
-	,"expressions": {
+	,"expressions object": {
 		"scope": "javascript"
 		,"prefix": "exps"
 		,"body": [
 			"{ expressions: [$0] }"
+		]
+	}
+	,"expression property": {
+		"scope": "javascript"
+		,"prefix": "exp:"
+		,"body": [
+			"expression: $0"
+		]
+	}
+	,"expressions property": {
+		"scope": "javascript"
+		,"prefix": "exps:"
+		,"body": [
+			"expressions: [$0]"
 		]
 	}
 }
