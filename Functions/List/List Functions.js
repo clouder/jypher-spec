@@ -4,6 +4,32 @@
  * MATCH (a) WHERE a.name = 'Alice'
  * RETURN keys(a)
  */
+[
+    { clause : {
+        name: "MATCH"
+        ,expression: { pattern: [{ node: { name: "a" } }] }
+    } }
+    ,{ clause: {
+        name: "WHERE"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: [
+                { operator: {
+                    name: "."
+                    ,expressions: ["a" ,"name"]
+                } }
+                ,{ literal: "Alice" }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { function: {
+            name: "keys"
+            ,argument: { expression: "a" }
+        } }
+    } }
+]
 
 /**
  * 2. labels()
@@ -11,6 +37,32 @@
  * MATCH (a) WHERE a.name = 'Alice'
  * RETURN labels(a)
  */
+[
+    { clause : {
+        name: "MATCH"
+        ,expression: { pattern: [{ node: { name: "a" } }] }
+    } }
+    ,{ clause: {
+        name: "WHERE"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: [
+                { operator: {
+                    name: "."
+                    ,expressions: ["a" ,"name"]
+                } }
+                ,{ literal: "Alice" }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { function: {
+            name: "labels"
+            ,argument: { expression: "a" }
+        } }
+    } }
+]
 
 /**
  * 3. nodes()
@@ -19,12 +71,77 @@
  * WHERE a.name = 'Alice' AND c.name = 'Eskil'
  * RETURN nodes(p)
  */
-
+[
+    { clause: {
+        name: "MATCH"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: [
+                "p"
+                ,{ pattern: [
+                    { node: { name: "a" } }
+                    ,{ edge: { direction: ">" } }
+                    ,{ node: { name: "b" } }
+                    ,{ edge: { direction: ">" } }
+                    ,{ node: { name: "c" } }
+                ] }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "WHERE"
+        ,expression: { operator: {
+            name: "AND"
+            ,expressions: [
+                { operator: {
+                    name: "="
+                    ,expressions: [
+                        { operator: { name: "." ,expressions: ["a" ,"name"] } }
+                        ,{ literal: "Alice" }
+                    ]
+                } }
+                ,{ operator: {
+                    name: "="
+                    ,expressions: [
+                        { operator: { name: "." ,expressions: ["c" ,"name"] } }
+                        ,{ literal: "Eskil" }
+                    ]
+                } }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { function: {
+            name: "nodes"
+            ,argument: { expression: "p" }
+        } }
+    } }
+]
 /**
  * 4. range()
  *
  * RETURN range(0, 10), range(2, 18, 3), range(0, 5, -1)
  */
+[
+    { clause: {
+        name: "RETURN"
+        ,expressions: [
+            { function: {
+                name: "range"
+                ,expressions: [{ literal: 0} ,{ literal: 10 }]
+            } }
+            ,{ function: {
+                name: "range"
+                ,expressions: [{ literal: 2} ,{ literal: 18 } ,{literal: 3 }]
+            } }
+            ,{ function: {
+                name: "range"
+                ,expressions: [{ literal: 0} ,{ literal: 5 } ,{ literal: -1 }]
+            } }
+        ]
+    } }
+]
 
 /**
  * 5. reduce()
@@ -33,6 +150,96 @@
  * WHERE a.name = 'Alice' AND b.name = 'Bob' AND c.name = 'Daniel'
  * RETURN reduce(totalAge = 0, n IN nodes(p) | totalAge + n.age) AS reduction
  */
+[
+    { clause: {
+        name: "MATCH"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: [
+                "p"
+                ,{ pattern: [
+                    { node: { name: "a" } }
+                    ,{ edge: { direction: ">" } }
+                    ,{ node: { name: "b" } }
+                    ,{ edge: { direction: ">" } }
+                    ,{ node: { name: "c" } }
+                ] }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "WHERE"
+        ,expression: { operator: {
+            name: "AND"
+            ,expressions: [
+                { operator: {
+                    name: "="
+                    ,expressions: [
+                        { operator: { name: "." ,expressions: ["a" ,"name"] } }
+                        ,{ literal: "Alice" }
+                    ]
+                } }
+                ,{ operator: {
+                    name: "="
+                    ,expressions: [
+                        { operator: { name: "." ,expressions: ["b" ,"name"] } }
+                        ,{ literal: "Bob" }
+                    ]
+                } }
+                ,{ operator: {
+                    name: "="
+                    ,expressions: [
+                        { operator: { name: "." ,expressions: ["c" ,"name"] } }
+                        ,{ literal: "Daniel" }
+                    ]
+                } }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { operator: {
+            name: "AS"
+            ,expressions: [
+                { function: {
+                    name: "reduce"
+                    ,arguments: [
+                        { operator: {
+                            name: "="
+                            ,expressions: ["totalAge" ,{ literal: 0 }]
+                        } }
+                        ,{ operator: {
+                            name: "|"
+                            ,expressions: [
+                                { operator: {
+                                    name: "IN"
+                                    ,expression: [
+                                        "n"
+                                        ,{ function: {
+                                            name: "nodes"
+                                            ,argument: { expression: "p" }
+                                        } }
+                                    ]
+                                } }
+                                ,{ operator: {
+                                    name: "+"
+                                    ,expressions: [
+                                        "totalAge"
+                                        ,{ operator: {
+                                            name: "."
+                                            ,expressions: ["n" ,"age"]
+                                        } }
+                                    ]
+                                } }
+                            ]
+                        } }
+                    ]
+                } }
+                ,"reduction"
+            ]
+        } }
+    } }
+]
 
 /**
  * 6. relationships()
@@ -41,6 +248,59 @@
  * WHERE a.name = 'Alice' AND c.name = 'Eskil'
  * RETURN relationships(p)
  */
+[
+    { clause: {
+        name: "MATCH"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: [
+                "p"
+                ,{ pattern: [
+                    { node: { name: "a" } }
+                    ,{ edge: { direction: ">" } }
+                    ,{ node: { name: "b" } }
+                    ,{ edge: { direction: ">" } }
+                    ,{ node: { name: "c" } }
+                ] }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "WHERE"
+        ,expression: { operator: {
+            name: "AND"
+            ,expressions: [
+                { operator: {
+                    name: "="
+                    ,expressions: [
+                        { operator: {
+                            name: "."
+                            ,expressions: ["a" ,"name"]
+                        } }
+                        ,{ literal: "Alice" }
+                    ]
+                } }
+                ,{ operator: {
+                    name: "="
+                    ,expressions: [
+                        { operator: {
+                            name: "."
+                            ,expressions: ["c" ,"name"]
+                        } }
+                        ,{ literal: "Eskil" }
+                    ]
+                } }
+            ]
+        }}
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { function: {
+            name: "relationships"
+            ,argument: { expression: "p" }
+        } }
+    } }
+]
 
 /**
  * 7. reverse()
@@ -48,6 +308,31 @@
  * WITH [4923,'abc',521, null, 487] AS ids
  * RETURN reverse(ids)
  */
+[
+    { clause: {
+        name: "WITH"
+        ,expression: { operator: {
+            name: "AS"
+            ,expressions: [
+                { literal: [
+                    { literal: 4923 }
+                    ,{ literal: 'abc' }
+                    ,{ literal: 521 }
+                    ,{ literal: null }
+                    ,{ literal: 487 }
+                ] }
+                ,"ids"
+            ]
+        }}
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expression: { function: {
+            name: "reverse"
+            ,argument: { expression: "ids" }
+        } }
+    } }
+]
 
 /**
  * 8. tail()
