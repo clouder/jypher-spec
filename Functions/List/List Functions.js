@@ -340,6 +340,41 @@
  * MATCH (a) WHERE a.name = 'Eskil'
  * RETURN a.array, tail(a.array)
  */
+[
+    { clause: {
+        name: "MATCH"
+        ,expression: { pattern: [{ node: { name: "a" } }] }
+    } }
+    ,{ clause: {
+        name: "WHERE"
+        ,expression: { operator: {
+            name: "="
+            ,expressions: [
+                { operator: {
+                    name: "."
+                    ,expressions: ["a" ,"name"]
+                } }
+                ,{ literal: "Eskil" }
+            ]
+        } }
+    } }
+    ,{ clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: {
+                name: "."
+                ,expressions: ["a" ,"array"]
+            } }
+            ,{ function: {
+                name: "tail"
+                ,argument: { operator: {
+                    name: "."
+                    ,expressions: ["a" ,"array"]
+                } }
+            } }
+        ]
+    } }
+]
 
 /**
  * 9. toBooleanList()
@@ -348,6 +383,55 @@
  * toBooleanList([null, null]) as nullsInList,
  * toBooleanList(['a string', true, 'false', null, ['A','B']]) as mixedList
  */
+[
+    { clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toBoleanList"
+                        ,argument: { literal: null }
+                    } }
+                    ,"noList"
+                ]
+            } }
+            ,{ operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toBoleanList"
+                        ,argument: { literal: [
+                            { literal: null }
+                            ,{ literal: null }
+                        ] }
+                    } }
+                    ,"nullsInList"
+                ]
+            } }
+            ,{ operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toBoleanList"
+                        ,argument: { literal: [
+                            { literal: "a string" }
+                            ,{ literal: true }
+                            ,{ literal: "false" }
+                            ,{ literal: null }
+                            ,{ literal: [
+                                { literal: "A" }
+                                ,{ literal: "B" }
+                            ] }
+                        ] }
+                    } }
+                    ,"mixedList"
+                ]
+            } }
+        ]
+    } }
+]
 
 /**
  * 10. toFloatList()
@@ -356,6 +440,55 @@
  * toFloatList([null, null]) as nullsInList,
  * toFloatList(['a string', 2.5, '3.14159', null, ['A','B']]) as mixedList
  */
+[
+    { clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toFloatList"
+                        ,argumnet: { literal: null }
+                    } }
+                    ,"noList"
+                ]
+            } }
+            ,{ operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toFloatList"
+                        ,argument: { literal: [
+                            { literal: null }
+                            ,{ literal: null }
+                        ] }
+                    } }
+                    ,"nullsInList"
+                ]
+            } }
+            ,{ operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toFloatList"
+                        ,argument: { literal: [
+                            { literal: "a string" }
+                            ,{ literal: 2.5 }
+                            ,{ literal: "3.14159" }
+                            ,{ literal: null }
+                            ,{ literal: [
+                                { literal: "A" }
+                                ,{ literal: "B" }
+                            ] }
+                        ] }
+                    } }
+                    ,"mixedList"
+                ]
+            } }
+        ]
+    } }
+]
 
 /**
  * 11. toIntegerList()
@@ -364,6 +497,55 @@
  * toIntegerList([null, null]) as nullsInList,
  * toIntegerList(['a string', 2, '5', null, ['A','B']]) as mixedList
  */
+[
+    { clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toIntegerList"
+                        ,argumnet: { literal: null }
+                    } }
+                    ,"noList"
+                ]
+            } }
+            ,{ operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toIntegerList"
+                        ,argument: { literal: [
+                            { literal: null }
+                            ,{ literal: null }
+                        ] }
+                    } }
+                    ,"nullsInList"
+                ]
+            } }
+            ,{ operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toIntegerList"
+                        ,argument: { literal: [
+                            { literal: "a string" }
+                            ,{ literal: 2.5 }
+                            ,{ literal: "5" }
+                            ,{ literal: null }
+                            ,{ literal: [
+                                { literal: "A" }
+                                ,{ literal: "B" }
+                            ] }
+                        ] }
+                    } }
+                    ,"mixedList"
+                ]
+            } }
+        ]
+    } }
+]
 
 /**
  * 12. toStringList()
@@ -378,3 +560,59 @@
  *   ['A','B']
  * ]) as mixedList
  */
+[
+    { clause: {
+        name: "RETURN"
+        ,expressions: [
+            { operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toStringList"
+                        ,argumnet: { literal: null }
+                    } }
+                    ,"noList"
+                ]
+            } }
+            ,{ operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toStringList"
+                        ,argument: { literal: [
+                            { literal: null }
+                            ,{ literal: null }
+                        ] }
+                    } }
+                    ,"nullsInList"
+                ]
+            } }
+            ,{ operator: {
+                name: "AS"
+                ,expressions: [
+                    { function: {
+                        name: "toStringList"
+                        ,argument: { literal: [
+                            { literal: "already a string" }
+                            ,{ literal: 2 }
+                            ,{ function: {
+                                name: "date"
+                                ,argument: { literal: {
+                                    year: { literal: 1955 }
+                                    ,month: { literal: 11 }
+                                    ,day: { literal: 5 }
+                                } }
+                            } }
+                            ,{ literal: null }
+                            ,{ literal: [
+                                { literal: "A" }
+                                ,{ literal: "B" }
+                            ] }
+                        ] }
+                    } }
+                    ,"mixedList"
+                ]
+            } }
+        ]
+    } }
+]
